@@ -28,4 +28,14 @@ def calc_annualized_return(asset_price_history, start_date, end_date = np.NaN):
     
     return ((asset_price_history.loc[y]['Close']/asset_price_history.loc[x]['Close'])**(1/difference_in_years)-1)*100.00, ((asset_price_history.loc[y]['Close']/asset_price_history.loc[x]['Close']) - 1) * 100.00 
   
-  
+def get_drawdown(asset_price_history, start_date, end_date = np.NaN):
+    if end_date==np.NaN:
+        end_date = asset_price_history.loc[len(asset_price_history)-1]['Date']
+    asset_price_history_truncated = asset_price_history[(asset_price_history['Date']>=start_date) & (asset_price_history['Date']<=end_date)]
+    
+    asset_price_history_truncated['PrevPeak'] = np.NaN
+    for i in asset_price_history_truncated.index:
+        asset_price_history_truncated.loc[i,'PrevPeak'] = asset_price_history_truncated[:i+1]['Close'].max()
+    asset_price_history_truncated['Drawdown'] = (asset_price_history_truncated['Close']-asset_price_history_truncated['PrevPeak'])/asset_price_history_truncated['PrevPeak']
+    
+    return asset_price_history_truncated
