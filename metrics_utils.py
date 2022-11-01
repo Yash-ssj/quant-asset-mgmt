@@ -1,6 +1,7 @@
 import pandas as pd
 import yfinance as yf
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 def download_ticker_data(ticker_list, start_date, end_date):
     x = 0
