@@ -58,11 +58,11 @@ def get_moving_average(asset_price_history, no_of_days = 10):
     asset_price_history['price_moving_average'] = asset_price_history.groupby('Ticker')['Close'].transform(lambda x: x.rolling(no_of_days, 1).mean())
     return asset_price_history
              
-def get_price_direction(asset_price_history, no_of_days = 10, end_date = np.NaN):
+def get_price_direction(asset_price_history, no_of_days = 10, moving_average_window = 10, end_date = np.NaN):
     if end_date==np.NaN:
         end_date = asset_price_history.loc[len(asset_price_history)-1]['Date']
     asset_price_history_truncated = asset_price_history[asset_price_history['Date']<=end_date]
-    asset_price_history_truncated = get_moving_average(asset_price_history_truncated, no_of_days = no_of_days)
+    asset_price_history_truncated = get_moving_average(asset_price_history_truncated, no_of_days = moving_average_window)
     if asset_price_history_truncated.loc[-1]['price_moving_average']>asset_price_history_truncated.shift(no_of_days)['price_moving_average']:
         return 1
     else if asset_price_history_truncated.loc[-1]['price_moving_average']==asset_price_history_truncated.shift(no_of_days)['price_moving_average']:
