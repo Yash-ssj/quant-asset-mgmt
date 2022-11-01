@@ -39,3 +39,10 @@ def get_drawdown(asset_price_history, start_date, end_date = np.NaN):
     asset_price_history_truncated['Drawdown'] = (asset_price_history_truncated['Close']-asset_price_history_truncated['PrevPeak'])/asset_price_history_truncated['PrevPeak']
     
     return asset_price_history_truncated
+
+def plot_price_history(asset_price_history, start_date, end_date):
+    annualized_return, actual_return = calc_annualized_return(asset_price_history, start_date, end_date)
+    plt.figure(figsize=(20,10))
+    plt.plot(asset_price_history[(asset_price_history['Date']>=start_date) & (asset_price_history['Date']<=end_date)]['Date'],asset_price_history[(asset_price_history['Date']>=start_date) & (asset_price_history['Date']<=end_date)]['Close'], label = str(annualized_return) + ", " + str(actual_return))
+    plt.legend()
+
