@@ -58,9 +58,9 @@ def get_price_direction(asset_price_history, no_of_days = 10, end_date = np.NaN)
     if end_date==np.NaN:
         end_date = asset_price_history.loc[len(asset_price_history)-1]['Date']
     asset_price_history_truncated = asset_price_history[asset_price_history['Date']<=end_date]
-    if asset_price_history_truncated.loc[-1]['Close']>asset_price_history_truncated.loc[-1].shift(no_of_days)['Close']:
+    if asset_price_history_truncated.loc[-1]['Close']>asset_price_history_truncated.shift(no_of_days)['Close']:
         return 1
-    else if asset_price_history_truncated.loc[-1]['Close']==asset_price_history_truncated.loc[-1].shift(no_of_days)['Close']:
+    else if asset_price_history_truncated.loc[-1]['Close']==asset_price_history_truncated.shift(no_of_days)['Close']:
         return 0
     else:
         return -1
