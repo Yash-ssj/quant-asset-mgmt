@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import yfinance as yf
 from datetime import datetime
 import matplotlib.pyplot as plt
@@ -47,3 +48,5 @@ def plot_price_history(asset_price_history, start_date, end_date):
     plt.plot(asset_price_history[(asset_price_history['Date']>=start_date) & (asset_price_history['Date']<=end_date)]['Date'],asset_price_history[(asset_price_history['Date']>=start_date) & (asset_price_history['Date']<=end_date)]['Close'], label = str(annualized_return) + ", " + str(actual_return))
     plt.legend()
 
+def plot_drawdown(asset_price_history, start_date, end_date = np.NaN):
+    asset_dd_history = get_drawdown(asset_price_history, start_date, end_date)
