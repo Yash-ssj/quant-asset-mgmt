@@ -50,3 +50,7 @@ def plot_price_history(asset_price_history, start_date, end_date):
 
 def plot_drawdown(asset_price_history, start_date, end_date = np.NaN):
     asset_dd_history = get_drawdown(asset_price_history, start_date, end_date)
+    plt.figure(figsize=(20,10))
+    plt.plot(asset_dd_history['Date'], asset_dd_history['Drawdown'], label = 'Max Drawdown = ' & ' + str(asset_dd_history['Drawdown'].max()))
+    plt.legend()
+
