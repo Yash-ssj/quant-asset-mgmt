@@ -1,3 +1,4 @@
+import pandas as pd
 from datetime import datetime
 import metrics_utils as qutils
 
@@ -17,6 +18,11 @@ def price_direction_strategy(asset_price_series, price_dirs = [0, 5, 10, 15, 20]
       ticker_selection.append(x)
   return ticker_selection
 
-def get_rebal_selections:
+def calc_backtest_returns(asset_price_history, backtest_portfolio_alloc):
+  
+
+def get_rebal_selections(backtest_strt_dt, backtest_end_dt, rebal_frequency, asset_perf_history, invstmt_strategy = 'price_direction'):
+  bktst_alloc = pd.DataFrame(columns = ['Date','Asset','Weight'])
+  rebal_dts = [datetime.strptime(backtest_strt_dt, '%Y-%m-%d') + ]
   
   
