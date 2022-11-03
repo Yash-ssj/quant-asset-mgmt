@@ -69,4 +69,8 @@ def get_price_direction(asset_price_history, no_of_days = 10, moving_average_win
     else:
         return -1
 
+def get_price_returns(asset_price_history, frequency_days = 1):
+    col_name = str(frequency_days)+'_day_return'
+    asset_price_history[col_name] = asset_price_history.groupby('Ticker')['Close'].transform(lambda x: x/x.shift(frequency_days)
+    return asset_price_history
              
