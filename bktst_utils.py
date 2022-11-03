@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from datetime import datetime
 import metrics_utils as qutils
 
@@ -20,7 +21,18 @@ def price_direction_strategy(asset_price_series, price_dirs = [0, 5, 10, 15, 20]
 
 def calc_backtest_returns(asset_price_history, backtest_portfolio_alloc):
   asset_price_history = qutils.get_price_returns(asset_price_history = asset_price_history)
+  
   calc_dates = sorted(asset_price_history['Date'].unique().tolist())
+  initial_inv = 100000.000000
+  rebal_dates = sorted(backtest_portfolio_alloc['Date'].unique().tolist()))
+  asset_price_history['isRebalDate'] = np.where(asset_price_history['Date'] in rebal_dates, 1, 0)
+  asset_price_history['Rebal'] = rebal_dates[0]
+  
+  
+  my_strategy_series = pd.DataFrame(columns = ['Date','portf_val'])
+  my_strategy_series.loc[0] = [rebal_dates[0], initial_inv]
+  
+    
   
 
 def get_rebal_selections(backtest_strt_dt, backtest_end_dt, rebal_frequency, asset_perf_history, invstmt_strategy = 'price_direction', weight_scheme = 'EW'):
