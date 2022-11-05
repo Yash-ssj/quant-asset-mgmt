@@ -6,15 +6,19 @@ import bktst_utils as butils
 import metrics_utils as mutils
 from datetime import datetime
 
-#nifty_250 = pd.read_csv(r'C:\\Users\\Yashodeep\\Documents\\Personal\\Investment\\quant-asset-mgmt\\ind_niftysmallcap250list.csv')
-nifty_50 = pd.read_csv(r'C:\\Users\\Yashodeep\\Documents\\Personal\\Investment\\quant-asset-mgmt\\ind_nifty50list.csv')
+nifty_250 = pd.read_csv(r'C:\\Users\\Yashodeep\\Documents\\Personal\\Investment\\quant-asset-mgmt\\ind_niftysmallcap250list.csv')
+#nifty_50 = pd.read_csv(r'C:\\Users\\Yashodeep\\Documents\\Personal\\Investment\\quant-asset-mgmt\\ind_nifty50list.csv')
 
 my_strt_dt = datetime.strptime('2019-03-01', '%Y-%m-%d')
 my_end_dt = datetime.strptime('2022-11-05', '%Y-%m-%d')
 
-my_universe = mutils.download_ticker_data(ticker_list = nifty_50['Ticker'].unique().tolist(), start_date = '2019-01-01', end_date = '2022-11-05')
+my_universe = mutils.download_ticker_data(ticker_list = nifty_250['Ticker'].unique().tolist(), start_date = '2019-01-01', end_date = '2022-11-05')
 
 price_direction_selections = butils.get_rebal_selections(backtest_strt_dt = my_strt_dt, backtest_end_dt = my_end_dt, rebal_frequency = 2, asset_perf_history = my_universe, invstmt_strategy = 'price_direction', weight_scheme = 'EW')
+
+#price_direction_selections.to_excel('price_direction_selections_nifty250.xlsx',index=False)
+
+backtest_perf = butils.calc_backtest_returns(asset_price_history = my_universe, backtest_portfolio_alloc = price_direction_selections)
 
 backtest_strt_dt = my_strt_dt
 backtest_end_dt = my_end_dt
