@@ -76,18 +76,20 @@ def get_price_returns(asset_price_history, frequency_days = 1):
     
     return asset_price_history
 
-def concat_price_series(price_series_list):
-    price_ts_history = pd.DataFrame(columns = ['Ticker','Date','Close'])
-    min_date = datetime.strptime('1950-01-01', '%Y-%m-%d')
-    max_date = datetime.strptime('2037-12-31', '%Y-%m-%d')
-    for i in price_series_list:
-        i = i.rename(columns = {i.columns.tolist()[0]:'Ticker', i.columns.tolist()[1]: 'Date', i.columns.tolist()[2]: 'Close'})
-        get_price_returns(i, 1)
-        i['Close_Rebased'] = 1000000.000000*i['1_day_return'].cumprod()
-        min_date = i['Date'].min() if i['Date'].min() >= min_date else min_date
-        max_date = i['Date'].max() if i['Date'].max() <= max_date else max_date
-        price_ts_history = price_ts_history.append(i, ignore_index=True)
-    return price_ts_history[(price_ts_history['Date']>=min_date) & (price_ts_history['Date']<=max_date)]
+def concat_price_series(price_series_list, start_date = datetime.strptime('1950-01-01', '%Y-%m-%d'), end_date = datetime.strptime('2050-12-31', '%Y-%m-%d')):
+    if type(price_series_list) != list:
+        price_series = price_series_list
+    else:
+        price_series = pd.concat(price_series_list)
+    price_series = price_series.rename(columns = {price_series.columns.tolist()[0]:'Ticker', price_series.columns.tolist()[1]: 'Date', price_series.columns.tolist()[2]: 'Close'})
+    
+    min_date = max(price_series.groupby('Ticker')['Date'].min().reset_index()['Date'].max(), start_date)
+    max_date = min(price_series.groupby('Ticker')['Date'].max().reset_index()['Date'].min(), end_date)
+    price_series = price_series[(price_series['Date']>=min_date) & (price_series['Date']<=max_date)]
+    get_price_returns(price_series, 1)
+    price_series['Close_Rebased'] = price_series.groupby('Ticker')['1_day_return'].transform(lambda x: x.cumprod())
+    
+    return price_series
 
 def plot_perf_comparison(asset_time_series_history):
     plt.figure(figsize=(20,10))
@@ -95,5 +97,5 @@ def plot_perf_comparison(asset_time_series_history):
         i = asset_time_series_history[asset_time_series_history['Ticker'] == j]
         plt.plot(i['Date'], i['Close_Rebased'], label = i.iloc[0]['Ticker'])
     plt.legend()
-    
+
     

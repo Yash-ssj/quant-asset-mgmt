@@ -36,6 +36,14 @@ price_time_series = mutils.concat_price_series([my_strgy_perf, nifty250_hist])
 mutils.plot_perf_comparison(price_time_series)
 #mutils.plot_price_history(asset_price_history = nifty250_hist, start_date = my_strt_dt, end_date=my_end_dt)
 
+indexes_hist = mutils.download_ticker_data(ticker_list = ['^NSEI','^NDX'], start_date = '2000-01-01', end_date = '2022-11-12')
+price_time_series = mutils.concat_price_series([indexes_hist[indexes_hist['Ticker']==x][['Ticker','Date','Close']] for x in indexes_hist['Ticker'].unique().tolist()])
+price_time_series = mutils.concat_price_series(indexes_hist[['Ticker','Date','Close']],start_date=datetime.strptime('2020-03-31', '%Y-%m-%d'))
+mutils.plot_perf_comparison(price_time_series)
+
+type(indexes_hist['Ticker'].unique().tolist())
+
+price_time_series.groupby('Ticker')['Date'].min().reset_index().merge(price_time_series, on=['Ticker','Date'], how='inner')
 
 ##Testing- QA
 
