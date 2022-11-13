@@ -60,6 +60,7 @@ def calc_backtest_returns(asset_price_history, backtest_portfolio_alloc):
       my_strategy_series = my_strategy_series.append({'Date': i, 'portf_val': asset_prices['AssetValue'].sum()},ignore_index=True)
       #my_strategy_series = pd.concat([my_strategy_series, pd.DataFrame({'Date': i, 'portf_val': asset_prices['AssetValue'].sum()}.items())])
       port_val = asset_prices['AssetValue'].sum() if asset_prices['AssetValue'].sum() != 0 else port_val
+    print("Done for date: "+str(i))
   
   return my_strategy_series
 
@@ -69,7 +70,8 @@ def get_rebal_selections(backtest_strt_dt, backtest_end_dt, rebal_frequency, ass
   #rebal_dts = [datetime.strptime(backtest_strt_dt, '%Y-%m-%d') + relativedelta(months = rebal_frequency) * i for i in [0,]]
   rebal_date = backtest_strt_dt
   while rebal_date <= backtest_end_dt:
-    rebal_selections = eval(invstmt_strategy+'_strategy'+"(asset_perf_history[asset_perf_history['Date']<rebal_date])")
+    #curr_selection_universe = asset_perf_history[(asset_perf_history['Date']<rebal_date) & (asset_perf_history['Date']>=(rebal_date - relativedelta(months = 5)))]
+    rebal_selections = eval(invstmt_strategy+'_strategy'+"(asset_perf_history[(asset_perf_history['Date']<rebal_date) & (asset_perf_history['Date']>=(rebal_date - relativedelta(months = 4)))])")
     #col1 = [rebal_date]*len(rebal_selections)
     if not len(rebal_selections) == 0:
         bktst_alloc_dict = {"Date":[rebal_date]*len(rebal_selections), "Ticker":rebal_selections, "Weight": generate_weights(no_of_assets = len(rebal_selections), weighting_scheme = weight_scheme)}
